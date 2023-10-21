@@ -60,6 +60,7 @@ window.addEventListener('load', () => {
 
     function bindEvents() {
         inputEl.addEventListener('input', onInputElInput);
+        inputEl.addEventListener('focus', onInputElFocus);
         inputBtn.addEventListener('click', onInputBtnClick);
         listWrapper.addEventListener('click', onListWrapperClick);
         taskWrapper.addEventListener('click', onTaskWrapperClick);
@@ -68,12 +69,21 @@ window.addEventListener('load', () => {
     function onColorElClick() {
         root.style.setProperty('--bg-color', this.getAttribute('data-color'));
         localStorage.setItem('data-color', this.getAttribute('data-color'));
-        console.log(localStorage)
     }
 
     function onDelete() {
         listWrapper.innerHTML = '';
         saveData();
+    }
+
+    function onKeyDown(e) {
+        if (e.key === 'Enter') {
+            onInputBtnClick();
+        }
+    }
+
+    function onInputElFocus() {
+        document.addEventListener('keydown', onKeyDown);
     }
 
     function onInputElInput() {
@@ -99,7 +109,6 @@ window.addEventListener('load', () => {
         listWrapper.appendChild(listContainer);
 
         saveData();
-
         inputEl.value = '';
     }
 

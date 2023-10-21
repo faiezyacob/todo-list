@@ -74,7 +74,6 @@ h4 {
     height: auto;
     margin: auto;
     padding: 25px 25px 0 25px;
-    width: 450px;
 }
 
 .main__wrapper>div {
@@ -114,9 +113,17 @@ h4 {
 
 
 .list__container {
+    border: 2px solid #fff;
+    border-radius: 25px;
     display: flex;
     cursor: pointer;
     margin-bottom: 10px;
+    padding: 0;
+    transition: all .5s ease-in-out;
+}
+.list__container:hover {
+    border: 2px solid var(--bg-color);
+    padding: 5px;
 }
 .list__container div {
     align-items: center;
