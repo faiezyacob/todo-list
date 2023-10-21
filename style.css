@@ -47,6 +47,22 @@ input:focus {
     outline: none;
 }
 
+span {
+    align-items: center;
+    align-self: center;
+    background-color: #FFC0CB;
+    border-radius: 15px;
+    display: flex;
+    cursor: pointer;
+    float: right;
+    height: 25px;
+    padding: 5px 10px;
+}
+
+h4 {
+    float: left;
+}
+
 .main__wrapper {
     background-color: #fff;
     border: 1px solid #000;
@@ -120,15 +136,6 @@ input:focus {
 }
 .list__container div.checked::before {
     background-color: var(--bg-color);
-}
-.list__container span {
-    align-items: center;
-    align-self: center;
-    background-color: #FFC0CB;
-    border-radius: 15px;
-    display: flex;
-    height: 25px;
-    padding: 5px 10px;
 }
 
 .background__changer {

@@ -13,6 +13,7 @@ window.addEventListener('load', () => {
     let inputBtn;
     let inputWrapper;
     let listWrapper;
+    let taskWrapper;
 
     initClass();
 
@@ -21,6 +22,7 @@ window.addEventListener('load', () => {
         inputBtn = document.getElementById('input__button');
         inputWrapper = document.querySelector('.input__wrapper');
         listWrapper = document.querySelector('.list__wrapper');
+        taskWrapper = document.querySelector('.task__wrapper');
 
         appendData();
         setRandomBgColor();
@@ -46,6 +48,7 @@ window.addEventListener('load', () => {
         if (savedData) {
             listWrapper.innerHTML = savedData;
             taskWrapper.innerHTML = '<h4>Current task</h4>';
+            taskWrapper.innerHTML += '<span id="remove__btn">Remove all</span>'
         } else {
             taskWrapper.innerHTML = '<h4>You have no task</h4>';
         }
@@ -55,6 +58,7 @@ window.addEventListener('load', () => {
         inputEl.addEventListener('input', onInputElInput);
         inputBtn.addEventListener('click', onInputBtnClick);
         listWrapper.addEventListener('click', onListWrapperClick);
+        taskWrapper.addEventListener('click', onTaskWrapperClick);
     }
 
     function onColorElClick() {
@@ -79,7 +83,7 @@ window.addEventListener('load', () => {
 
         listContainer.classList.add('list__container');
         listEl.innerHTML = inputEl.value;
-        deleteEl.innerHTML = 'remove';
+        deleteEl.innerHTML = 'Remove';
         listContainer.appendChild(listEl);
         listContainer.appendChild(deleteEl);
         listWrapper.appendChild(listContainer);
@@ -98,6 +102,16 @@ window.addEventListener('load', () => {
 
         saveData();
     }
+
+    function onTaskWrapperClick(e) {
+        if (e.target.nodeName !== 'SPAN') {
+            return;
+        }
+
+        
+        listWrapper.innerHTML = '';
+        saveData();
+    } 
 
     function saveData() {
         localStorage.setItem('data-list', listWrapper.innerHTML);
