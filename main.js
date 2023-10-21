@@ -15,6 +15,8 @@ window.addEventListener('load', () => {
     let listWrapper;
     let taskWrapper;
 
+    let popupHelper;
+
     initClass();
 
     function initClass() {
@@ -28,6 +30,8 @@ window.addEventListener('load', () => {
         setRandomBgColor();
         appendColor();
         bindEvents();
+
+        popupHelper = new PopupHelper();
     }
 
     function appendColor() {
@@ -64,6 +68,12 @@ window.addEventListener('load', () => {
     function onColorElClick() {
         root.style.setProperty('--bg-color', this.getAttribute('data-color'));
         localStorage.setItem('data-color', this.getAttribute('data-color'));
+        console.log(localStorage)
+    }
+
+    function onDelete() {
+        listWrapper.innerHTML = '';
+        saveData();
     }
 
     function onInputElInput() {
@@ -108,9 +118,7 @@ window.addEventListener('load', () => {
             return;
         }
 
-        
-        listWrapper.innerHTML = '';
-        saveData();
+        popupHelper.show({content: 'This will remove all your task. Do you wish to proceed?', callback: onDelete});
     } 
 
     function saveData() {
@@ -142,5 +150,50 @@ window.addEventListener('load', () => {
         }
 
         return array;
+    }
+
+    function PopupHelper() {
+        this.show = show;
+
+        let cancelBtn;
+        let popupContent;
+        let popupWrapper;
+        let proceedBtn;
+        let callback;
+
+        initClass();
+
+        function initClass() {
+            cancelBtn = document.querySelector('.cancel__btn');
+            popupContent = document.querySelector('.popup__body');
+            popupWrapper = document.querySelector('.popup__helper__wrapper');
+            proceedBtn = document.querySelector('.proceed__btn');
+
+            bindEvents();
+        }
+
+        function show(data) {
+            popupWrapper.classList.add('active');
+            popupContent.innerHTML = data.content;
+            callback = data.callback;
+        }
+
+        function bindEvents() {
+            cancelBtn.addEventListener('click', onCancelBtnClick);
+            proceedBtn.addEventListener('click', onProceedBtnClick);
+        }
+
+        function onCancelBtnClick() {
+            popupWrapper.classList.remove('active');
+        }
+
+        function onProceedBtnClick() {
+            if (typeof callback !== 'function') {
+                return;
+            }
+
+            onCancelBtnClick();
+            callback();
+        }
     }
 })

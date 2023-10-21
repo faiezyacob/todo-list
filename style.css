@@ -27,10 +27,12 @@ button {
     cursor: pointer;
     font-size: 0.9em;
     padding: 10px 10px;
+    width: 100px;
+}
+button.type__add {
     position: absolute;
     right: 0;
     top: 0;
-    width: 100px;
 }
 
 input {
@@ -167,6 +169,36 @@ h4 {
     margin-bottom: 10px;
     margin-right: 10px;
     width: 40px;
+}
+
+.popup__helper__wrapper {
+    background-color: rgba(0, 0, 0, .5);
+    display: none;
+    height: 100vh;
+    position: fixed;
+    width: 100vw;
+}
+.popup__helper__wrapper.active {
+    display: flex;
+}
+
+.popup__helper__content {
+    background-color: #fff;
+    border-radius: 25px;
+    margin: auto;
+    max-width: 450px;
+    padding: 0 25px 25px 25px;
+}
+.popup__helper__content div {
+    padding-top: 25px;
+}
+
+.popup__header {
+    border-bottom: 1px solid #000;
+}
+
+.popup__footer {
+    float: right;
 }
 
 @media screen and (max-width: 480px) {
