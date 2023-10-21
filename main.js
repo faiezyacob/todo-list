@@ -41,7 +41,7 @@ window.addEventListener('load', () => {
     }
 
     function appendData() {
-        const savedData = localStorage.getItem('data');
+        const savedData = localStorage.getItem('data-list');
         const taskWrapper = document.querySelector('.task__wrapper');
         if (savedData) {
             listWrapper.innerHTML = savedData;
@@ -59,6 +59,7 @@ window.addEventListener('load', () => {
 
     function onColorElClick() {
         root.style.setProperty('--bg-color', this.getAttribute('data-color'));
+        localStorage.setItem('data-color', this.getAttribute('data-color'));
     }
 
     function onInputElInput() {
@@ -99,11 +100,16 @@ window.addEventListener('load', () => {
     }
 
     function saveData() {
-        localStorage.setItem('data', listWrapper.innerHTML);
+        localStorage.setItem('data-list', listWrapper.innerHTML);
         appendData();
     }
 
     function setRandomBgColor() {
+        if (localStorage.getItem('data-color') !== null) {
+            root.style.setProperty('--bg-color', localStorage.getItem('data-color'));
+            return;
+        }
+
         shuffleArray(pastelColors);
         const randomNum = Math.floor(Math.random() * pastelColors.length - 1) + 1;
         const bgColor = pastelColors[randomNum];
