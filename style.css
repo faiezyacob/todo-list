@@ -1,5 +1,6 @@
 :root {
-    --bg-color: #FFC0CB;
+    --bg-color: #FFFFFF;
+    --bg-color-dark: #000000;
     --shadow-color: #d8d8d8;
 }
 
@@ -17,22 +18,29 @@ body {
     display: flex;
     height: 100vh;
     width: 100vw;
+    transition: background-color .5s ease-in-out;
 }
 
 button {
     background-color: var(--bg-color);
-    border: 1px solid #000;
+    border: 1px solid var(--bg-color-dark);
     border-radius: 20px;
-    color: #000;
     cursor: pointer;
+    color: var(--bg-color-dark);
+    font-family: 'Courier New', Courier, monospace;
     font-size: 0.9em;
-    padding: 10px 10px;
-    width: 100px;
+    margin-left: 10px;
+    padding: 10px 30px;
+    transition: all .5s ease-in-out;
+    /* width: 100px; */
 }
 button.type__add {
     position: absolute;
     right: 0;
     top: 0;
+}
+button:hover {
+    padding: 10px 35px; 
 }
 
 input {
@@ -52,28 +60,47 @@ input:focus {
 span {
     align-items: center;
     align-self: center;
-    background-color: #FFC0CB;
+    background-color: var(--bg-color);
+    border: 1px solid var(--bg-color-dark);
     border-radius: 15px;
-    display: flex;
+    color: var(--bg-color-dark);
     cursor: pointer;
+    display: flex;
     float: right;
     height: 25px;
     padding: 5px 10px;
+    transition: all .5s ease-in-out;
+}
+span:hover {
+    padding: 10px 15px;
 }
 
 h4 {
     float: left;
 }
 
+i {
+    align-self: center;
+    background-color: var(--bg-color-dark);
+    border-radius: 50%;
+    color: var(--bg-color);
+    font-size: 0.75em;
+    height: 20px;
+    margin: 5px;
+    padding: 4px 5px;
+    transition: all .5s ease;
+}
+
 .main__wrapper {
     background-color: #fff;
-    border: 1px solid #000;
+    border: 1px solid var(--bg-color-dark);
     border-radius: 25px;
     display: flex;
     flex-direction: column;
     height: auto;
     margin: auto;
     padding: 25px 25px 0 25px;
+    width: 450px;
 }
 
 .main__wrapper>div {
@@ -96,7 +123,6 @@ h4 {
 
 .list__wrapper {
     max-height: 225px;
-    overflow-y: scroll;
     overflow-x: hidden;
 }
 .list__wrapper::-webkit-scrollbar {
@@ -113,43 +139,47 @@ h4 {
 
 
 .list__container {
-    border-radius: 25px;
+    background-color: var(--bg-color);
+    border: 1px solid var(--bg-color-dark);
+    border-radius: 15px;
     display: flex;
     cursor: pointer;
+    justify-content: space-between;
     margin-bottom: 10px;
     padding: 0;
     transition: all .5s ease-in-out;
 }
 .list__container:hover {
     background: var(--bg-color);
-    padding: 5px;
+    /* padding: 0px 5px; */
 }
 .list__container div {
     align-items: center;
     display: flex;
+    color: var(--bg-color-dark);
     padding-left: 25px;
     position: relative;
     width: 325px;
 }
 .list__container div::before {
-    border: 4px solid var(--bg-color);
+    border: 1px solid var(--bg-color-dark);
     border-radius: 50%;
     content: '';
-    height: 20px;
-    left: 0;
+    height: 16px;
+    left: 5px;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    width: 20px;
+    width: 16px;
 }
 .list__container:hover div::before {
-    border: 4px solid #fff;
+    border: 2px solid var(--bg-color-dark);
 }
-.list__container:hover div.checked::before {
-    background-color: #fff;
+.list__container.checked:hover div::before {
+    background-color: var(--bg-color-dark);
 }
-.list__container div.checked::before {
-    background-color: var(--bg-color);
+.list__container.checked div::before {
+    background-color: var(--bg-color-dark);
 }
 
 .background__changer {
@@ -210,7 +240,10 @@ h4 {
 }
 
 .popup__footer {
-    float: right;
+    /* float: right; */
+    display: flex;
+    justify-content: end;
+    width: 100%;
 }
 
 @media screen and (max-width: 480px) {
@@ -220,7 +253,7 @@ h4 {
     }
 
     input {
-        width: 70%;
+        width: 75%;
     }
 
     .main__wrapper {

@@ -1,11 +1,11 @@
 window.addEventListener('load', () => {
     const pastelColors = [
-        '#DFCEF0',
-        '#FAEDDA',
-        '#C8E0FD',
-        '#FFD1F4',
-        '#FFD2B8',
-        '#CBF9D9'
+        {light: '#DFCEF0', dark: '#9059C8'}, // pastel purple
+        {light: '#FAEDDA', dark: '#A9824A'}, // pastel peach
+        {light: '#C8E0FD', dark: '#4873A5'}, // pastel blue
+        {light: '#FFD1F4', dark: '#B64D9C'}, // pastel pink
+        {light: '#FFD2B8', dark: '#AA6E4B'}, // pastel orange
+        {light: '#CBF9D9', dark: '#47A263'} // pastel green
     ];
     const root = document.documentElement;
 
@@ -13,7 +13,10 @@ window.addEventListener('load', () => {
     let inputBtn;
     let inputWrapper;
     let listWrapper;
+    let listChecked;
+    let listUnchecked;
     let taskWrapper;
+    let taskStorage = [];
 
     let popupHelper;
 
@@ -23,6 +26,8 @@ window.addEventListener('load', () => {
         inputEl = document.getElementById('input__field');
         inputBtn = document.getElementById('input__button');
         inputWrapper = document.querySelector('.input__wrapper');
+        listChecked = document.querySelector('.list__checked');
+        listUnchecked = document.querySelector('.list__unchecked');
         listWrapper = document.querySelector('.list__wrapper');
         taskWrapper = document.querySelector('.task__wrapper');
 
@@ -36,26 +41,54 @@ window.addEventListener('load', () => {
 
     function appendColor() {
         const bgChangerEl = document.querySelector('.background__changer');
+        shuffleArray(pastelColors);
         for (let i = 0; i < pastelColors.length; i++) {
             const colorEl = document.createElement('div');
             colorEl.classList.add('color__list');
-            colorEl.style.background = pastelColors[i];
-            colorEl.setAttribute('data-color', pastelColors[i]);
+            colorEl.style.background = pastelColors[i].light;
+            colorEl.setAttribute('data-color', pastelColors[i].light);
+            colorEl.setAttribute('data-color-dark', pastelColors[i].dark);
             colorEl.addEventListener('click', onColorElClick);
             bgChangerEl.appendChild(colorEl);
         }
     }
 
     function appendData() {
-        const savedData = localStorage.getItem('data-list');
-        const taskWrapper = document.querySelector('.task__wrapper');
-        if (savedData) {
-            listWrapper.innerHTML = savedData;
-            taskWrapper.innerHTML = '<h4>Current task</h4>';
-            taskWrapper.innerHTML += '<span id="remove__btn">Remove all</span>'
-        } else {
-            taskWrapper.innerHTML = '<h4>You have no task</h4>';
+        const savedData = JSON.parse(localStorage.getItem('data-task'));
+        if (!savedData) {
+            return;
         }
+
+        taskStorage = savedData;
+
+        if (taskStorage.length === 0) {
+            taskWrapper.innerHTML = '<h4>You have no task</h4>';
+            return;
+        }
+
+        listChecked.innerHTML = '';
+        listUnchecked.innerHTML = '';
+        taskWrapper.innerHTML = '<h4>Current task</h4>';
+        taskWrapper.innerHTML += '<span>Clear</span>'
+
+        for (let i = 0; i < taskStorage.length; i++) {
+            const listContainer = document.createElement('div');
+            const listEl = document.createElement('div');
+            const deleteEl = document.createElement('i');   
+            listContainer.classList.add('list__container');
+            listContainer.setAttribute('data-id', taskStorage[i].id);
+            listEl.innerHTML = taskStorage[i].task;
+            deleteEl.classList.add('fa-solid', 'fa-trash');
+            listContainer.appendChild(listEl);
+            listContainer.appendChild(deleteEl);
+            if (taskStorage[i].checked) {
+                listContainer.classList.add('checked');
+                listChecked.appendChild(listContainer);
+            } else {
+                listUnchecked.appendChild(listContainer);
+            }
+        }
+
     }
 
     function bindEvents() {
@@ -67,13 +100,18 @@ window.addEventListener('load', () => {
     }
 
     function onColorElClick() {
+        const dataColor = this.getAttribute('data-color');
+        const dataColorDark = this.getAttribute('data-color-dark');
         root.style.setProperty('--bg-color', this.getAttribute('data-color'));
-        localStorage.setItem('data-color', this.getAttribute('data-color'));
+        root.style.setProperty('--bg-color-dark', this.getAttribute('data-color-dark'));
+        localStorage.setItem('data-color', JSON.stringify({light: dataColor, dark: dataColorDark}));
     }
 
     function onDelete() {
-        listWrapper.innerHTML = '';
-        saveData();
+        taskStorage = [];
+        listChecked.innerHTML = '';
+        listUnchecked.innerHTML = '';
+        storeData();
     }
 
     function onKeyDown(e) {
@@ -91,35 +129,36 @@ window.addEventListener('load', () => {
     }
 
     function onInputBtnClick() {
-        if (inputEl.value === '') {
+        if (inputEl.value.trim() === '') {
             inputWrapper.classList.add('error');
             return;
         }
-        
-        const listWrapper = document.querySelector('.list__wrapper');
-        const listContainer = document.createElement('div');
-        const listEl = document.createElement('div');
-        const deleteEl = document.createElement('span');
 
-        listContainer.classList.add('list__container');
-        listEl.innerHTML = inputEl.value;
-        deleteEl.innerHTML = 'Remove';
-        listContainer.appendChild(listEl);
-        listContainer.appendChild(deleteEl);
-        listWrapper.appendChild(listContainer);
+        let data = {
+            id: Date.now(),
+            task: inputEl.value,
+            checked: false,
+        };
 
-        saveData();
+        taskStorage.push(data);
+        storeData();
         inputEl.value = '';
     }
 
     function onListWrapperClick(e) {
-        if (e.target.nodeName === 'DIV') {
-            e.target.classList.toggle('checked');
-        } else if (e.target.nodeName === 'SPAN') {
-            e.target.parentElement.remove();
+        const elID = parseInt(e.target.parentElement.getAttribute('data-id'));
+
+        for (let i = 0; i < taskStorage.length; i++) {
+            if (taskStorage[i].id === elID) {
+                if (e.target.nodeName === 'DIV') {
+                    taskStorage[i].checked = !taskStorage[i].checked;
+                } else if (e.target.nodeName === 'I') {
+                    taskStorage.splice(i, 1);
+                }
+            }
         }
 
-        saveData();
+        storeData();
     }
 
     function onTaskWrapperClick(e) {
@@ -127,24 +166,27 @@ window.addEventListener('load', () => {
             return;
         }
 
-        popupHelper.show({content: 'This will remove all your task. Do you wish to proceed?', callback: onDelete});
-    } 
+        popupHelper.show({ content: 'This will remove all your task. Do you wish to proceed?', callback: onDelete });
+    }
 
-    function saveData() {
-        localStorage.setItem('data-list', listWrapper.innerHTML);
+    function storeData() {
+        localStorage.setItem('data-task', JSON.stringify(taskStorage));
         appendData();
     }
 
     function setRandomBgColor() {
         if (localStorage.getItem('data-color') !== null) {
-            root.style.setProperty('--bg-color', localStorage.getItem('data-color'));
+            const dataColor = JSON.parse(localStorage.getItem('data-color'));
+            root.style.setProperty('--bg-color', dataColor.light);
+            root.style.setProperty('--bg-color-dark', dataColor.dark);
             return;
         }
 
         shuffleArray(pastelColors);
         const randomNum = Math.floor(Math.random() * pastelColors.length - 1) + 1;
         const bgColor = pastelColors[randomNum];
-        root.style.setProperty('--bg-color', bgColor);
+        root.style.setProperty('--bg-color', bgColor.light);
+        root.style.setProperty('--bg-color-dark', bgColor.dark);
     }
 
     function shuffleArray(array) {
