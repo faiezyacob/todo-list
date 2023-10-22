@@ -240,7 +240,6 @@ i {
 }
 
 .popup__footer {
-    /* float: right; */
     display: flex;
     justify-content: end;
     width: 100%;
