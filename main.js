@@ -140,7 +140,7 @@ window.addEventListener('load', () => {
             checked: false,
         };
 
-        taskStorage.push(data);
+        taskStorage.unshift(data);
         storeData();
         inputEl.value = '';
     }

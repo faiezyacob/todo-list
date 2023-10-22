@@ -151,7 +151,6 @@ i {
 }
 .list__container:hover {
     background: var(--bg-color);
-    /* padding: 0px 5px; */
 }
 .list__container div {
     align-items: center;
