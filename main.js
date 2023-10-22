@@ -104,7 +104,7 @@ window.addEventListener('load', () => {
         const dataColorDark = this.getAttribute('data-color-dark');
         root.style.setProperty('--bg-color', this.getAttribute('data-color'));
         root.style.setProperty('--bg-color-dark', this.getAttribute('data-color-dark'));
-        localStorage.setItem('data-color', JSON.stringify({light: dataColor, dark: dataColorDark}));
+        localStorage.setItem('data-color-storage', JSON.stringify({light: dataColor, dark: dataColorDark}));
     }
 
     function onDelete() {
@@ -175,8 +175,8 @@ window.addEventListener('load', () => {
     }
 
     function setRandomBgColor() {
-        if (localStorage.getItem('data-color') !== null) {
-            const dataColor = JSON.parse(localStorage.getItem('data-color'));
+        if (localStorage.getItem('data-color-storage') !== null) {
+            const dataColor = JSON.parse(localStorage.getItem('data-color-storage'));
             root.style.setProperty('--bg-color', dataColor.light);
             root.style.setProperty('--bg-color-dark', dataColor.dark);
             return;
