@@ -63,6 +63,8 @@ window.addEventListener('load', () => {
 
         if (taskStorage.length === 0) {
             taskWrapper.innerHTML = '<h4>You have no task</h4>';
+            listChecked.innerHTML = '';
+            listUnchecked.innerHTML = '';
             return;
         }
 
@@ -158,6 +160,7 @@ window.addEventListener('load', () => {
             }
         }
 
+        console.log(taskStorage);
         storeData();
     }
 
