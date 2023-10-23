@@ -55,6 +55,8 @@ window.addEventListener('load', () => {
 
     function appendData() {
         const savedData = JSON.parse(localStorage.getItem('data-task'));
+        let pendingTask = 0;
+
         if (!savedData) {
             return;
         }
@@ -68,10 +70,9 @@ window.addEventListener('load', () => {
             return;
         }
 
+
         listChecked.innerHTML = '';
         listUnchecked.innerHTML = '';
-        taskWrapper.innerHTML = '<h4>Current task</h4>';
-        taskWrapper.innerHTML += '<span>Clear</span>'
 
         for (let i = 0; i < taskStorage.length; i++) {
             const listContainer = document.createElement('div');
@@ -88,8 +89,12 @@ window.addEventListener('load', () => {
                 listChecked.appendChild(listContainer);
             } else {
                 listUnchecked.appendChild(listContainer);
+                pendingTask++;
             }
         }
+
+        taskWrapper.innerHTML = '<h4>You have ' + pendingTask + ' task(s) pending.</h4>';
+        taskWrapper.innerHTML += '<span>Clear</span>'
 
     }
 
@@ -160,7 +165,6 @@ window.addEventListener('load', () => {
             }
         }
 
-        console.log(taskStorage);
         storeData();
     }
 
