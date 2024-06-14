@@ -31,4 +31,4 @@ If you'd like to contribute to the project, please follow these steps:
 
 ## Screenshot
 
-![Preview](https://faiezyacob.github.io/img/todo-list.png "Preview")
+![Preview](https://faiezyacob.github.io/img/todo-list-mockup.png "Preview")
