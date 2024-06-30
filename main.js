@@ -70,19 +70,21 @@ window.addEventListener('load', () => {
             return;
         }
 
-
         listChecked.innerHTML = '';
         listUnchecked.innerHTML = '';
 
         for (let i = 0; i < taskStorage.length; i++) {
             const listContainer = document.createElement('div');
             const listEl = document.createElement('div');
+            const timespan = document.createElement('p');
             const deleteEl = document.createElement('i');   
             listContainer.classList.add('list__container');
             listContainer.setAttribute('data-id', taskStorage[i].id);
             listEl.innerHTML = taskStorage[i].task;
+            timespan.innerHTML = getTimespan(taskStorage[i].id);
             deleteEl.classList.add('fa-solid', 'fa-trash');
             listContainer.appendChild(listEl);
+            listContainer.appendChild(timespan);
             listContainer.appendChild(deleteEl);
             if (taskStorage[i].checked) {
                 listContainer.classList.add('checked');
@@ -95,7 +97,40 @@ window.addEventListener('load', () => {
 
         taskWrapper.innerHTML = '<h4>You have ' + pendingTask + ' task(s) pending.</h4>';
         taskWrapper.innerHTML += '<span>Clear</span>'
+    }
 
+    function getTimespan(timespan) {
+        let difference = Date.now() - timespan;
+
+        if (difference / 86400000 >= 1) {
+            let curTimespan = Math.floor(difference / 86400000);
+            if (curTimespan / 365 >= 1) {
+                return Math.floor(curTimespan / 365) + ' years ago';
+            } 
+
+            if (curTimespan / 30 >= 1) {
+                return Math.floor(curTimespan / 30) + ' months ago';
+            } 
+
+            return curTimespan + ' day(s)';
+        }
+
+        if (difference / 3600000 >= 1) {
+            let curTimespan = Math.floor(difference / 3600000);
+            return curTimespan + ' hours ago';
+        }
+
+        if (difference / 60000 >= 1) {
+            let curTimespan = Math.floor(difference / 60000);
+            return curTimespan + ' minutes ago';
+        }
+
+        if (difference / 1000 >= 1) {
+            let curTimespan = Math.floor(difference / 1000);
+            return curTimespan + ' seconds ago';
+        }
+
+        return 'recently';
     }
 
     function bindEvents() {
@@ -141,10 +176,13 @@ window.addEventListener('load', () => {
             return;
         }
 
+        let currentDate = new Date();
+
         let data = {
             id: Date.now(),
             task: inputEl.value,
             checked: false,
+            createdAt: `${currentDate.getDate()}/${currentDate.getMonth() + 1}/${currentDate.getFullYear()}`
         };
 
         taskStorage.unshift(data);
